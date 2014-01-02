@@ -147,16 +147,16 @@ DebugCube::~DebugCube(){
 	glDeleteTextures(1,&texID);
 }
 
-void DebugCube::draw(ShaderProgram prg){
+void DebugCube::draw(ShaderProgram *prg){
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
-	glUniform1i(prg.getUniform(1),0);
+	glUniform1i(prg->getUniform(1),0);
 
-	glEnableVertexAttribArray(prg.getAttribute(0));
+	glEnableVertexAttribArray(prg->getAttribute(0));
 	glBindBuffer(GL_ARRAY_BUFFER,vbo);
 	glVertexAttribPointer(
-			prg.getAttribute(0),
+			prg->getAttribute(0),
 			3,
 			GL_FLOAT,
 			GL_FALSE,
@@ -164,10 +164,10 @@ void DebugCube::draw(ShaderProgram prg){
 			0
 		);
 
-	glEnableVertexAttribArray(prg.getAttribute(1));
+	glEnableVertexAttribArray(prg->getAttribute(1));
 	glBindBuffer(GL_ARRAY_BUFFER,tex);
 	glVertexAttribPointer(
-			prg.getAttribute(1),
+			prg->getAttribute(1),
 			2,
 			GL_FLOAT,
 			GL_FALSE,
@@ -178,8 +178,8 @@ void DebugCube::draw(ShaderProgram prg){
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,ibo);
 	glDrawElements(GL_TRIANGLES, sizeof(cubeElements),GL_UNSIGNED_SHORT,0);
 
-	glDisableVertexAttribArray(prg.getAttribute(0));
-	glDisableVertexAttribArray(prg.getAttribute(1));
+	glDisableVertexAttribArray(prg->getAttribute(0));
+	glDisableVertexAttribArray(prg->getAttribute(1));
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
 }

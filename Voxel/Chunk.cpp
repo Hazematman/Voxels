@@ -103,19 +103,17 @@ void Chunk::update(){
 			GL_STATIC_DRAW);
 }
 
-void Chunk::draw(ShaderProgram prg){
+void Chunk::draw(ShaderProgram *prg){
 	if(changed)
 		update();
 	if(elements == 0)
 		return;
 
-	//cout << "DRAWING " << elements << " elements" << endl;
-
-	glEnableVertexAttribArray(prg.getAttribute(0));
+	glEnableVertexAttribArray(prg->getAttribute(0));
 	glBindBuffer(GL_ARRAY_BUFFER,vbo);
-	glVertexAttribPointer(prg.getAttribute(0),4,GL_BYTE,GL_FALSE,0,0);
+	glVertexAttribPointer(prg->getAttribute(0),4,GL_BYTE,GL_FALSE,0,0);
 	glDrawArrays(GL_TRIANGLES,0,elements);
 
-	glDisableVertexAttribArray(prg.getAttribute(0));
+	glDisableVertexAttribArray(prg->getAttribute(0));
 	glBindBuffer(GL_ARRAY_BUFFER,0);
 }

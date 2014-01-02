@@ -4,6 +4,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <memory>
 #include "GraphicsUtils.hpp"
 #include "FPSCamera.hpp"
 #include "Debug/DebugCube.hpp"
@@ -56,17 +57,17 @@ int main(int argc, char *argv[]){
 		return EXIT_FAILURE;
 	}
 
-	ShaderProgram prg("data/vertex.glsl","data/fragment.glsl");
-	prg.setAttribute("vertex");
-	prg.setAttribute("texcoord");
-	prg.setUniform("mvp");
-	prg.setUniform("myTexture");
+	shared_ptr<ShaderProgram> prg(new ShaderProgram("data/vertex.glsl","data/fragment.glsl"));
+	prg->setAttribute("vertex");
+	prg->setAttribute("texcoord");
+	prg->setUniform("mvp");
+	prg->setUniform("myTexture");
 
-	ShaderProgram vprg("data/shaders/voxelV.glsl",
-			"data/shaders/voxelF.glsl");
-	vprg.setAttribute("coord");
-	vprg.setUniform("mvp");
-	vprg.setUniform("myTexture");
+	shared_ptr<ShaderProgram> vprg(new ShaderProgram("data/shaders/voxelV.glsl",
+			"data/shaders/voxelF.glsl"));
+	vprg->setAttribute("coord");
+	vprg->setUniform("mvp");
+	vprg->setUniform("myTexture");
 
 	DebugCube cube;
 
@@ -158,22 +159,22 @@ int main(int argc, char *argv[]){
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUseProgram(vprg.getID());
-		glUniformMatrix4fv(vprg.getUniform(0),1,GL_FALSE,
+		glUseProgram(vprg->getID());
+		glUniformMatrix4fv(vprg->getUniform(0),1,GL_FALSE,
 				glm::value_ptr(mvp));
 
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D,texID);
-		glUniform1i(vprg.getUniform(1),0);
+		glUniform1i(vprg->getUniform(1),0);
 
-		chunk.draw(vprg);
+		chunk.draw(vprg.get());
 
-		glUseProgram(prg.getID());
-		glUniformMatrix4fv(prg.getUniform(0),1,GL_FALSE,
+		glUseProgram(prg->getID());
+		glUniformMatrix4fv(prg->getUniform(0),1,GL_FALSE,
 				glm::value_ptr(mvp));
 
-		cube.draw(prg);
+		cube.draw(prg.get());
 
 		screen.display();
 		dt = timer.restart();

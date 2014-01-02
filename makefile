@@ -1,7 +1,7 @@
 SRCS = $(wildcard *.cpp) $(wildcard */*.cpp)
 OBJS = $(patsubst %.cpp,%.o,$(SRCS))
 LD_FLAGS = -lsfml-system -lsfml-window -lsfml-graphics -lGLEW -lGL
-CC_FLAGS = -g 
+CC_FLAGS = -g -std=c++11 
 TITLE = voxels
 
 $(TITLE): $(OBJS)

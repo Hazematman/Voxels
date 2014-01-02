@@ -18,7 +18,7 @@ class DebugCube {
 		DebugCube();
 		~DebugCube();
 
-		void draw(ShaderProgram prg);
+		void draw(ShaderProgram *prg);
 };
 
 #endif

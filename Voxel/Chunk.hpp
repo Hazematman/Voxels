@@ -25,7 +25,7 @@ class Chunk {
 		void set(int x, int y, int z, uint8_t type);
 
 		void update();
-		void draw(ShaderProgram prg);	
+		void draw(ShaderProgram *prg);	
 };
 
 #endif
