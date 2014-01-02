@@ -14,7 +14,7 @@ using namespace std;
 int width, height;
 
 bool initGL(){
-	glClearColor(0.0, 0.0, 1.0, 0.0);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -169,12 +169,6 @@ int main(int argc, char *argv[]){
 		glUniform1i(vprg->getUniform(1),0);
 
 		chunk.draw(vprg.get());
-
-		glUseProgram(prg->getID());
-		glUniformMatrix4fv(prg->getUniform(0),1,GL_FALSE,
-				glm::value_ptr(mvp));
-
-		cube.draw(prg.get());
 
 		screen.display();
 		dt = timer.restart();
