@@ -148,7 +148,6 @@ DebugCube::~DebugCube(){
 }
 
 void DebugCube::draw(ShaderProgram prg){
-	glUseProgram(prg.getID());
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);

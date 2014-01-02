@@ -5,19 +5,23 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include "GraphicsUtils.hpp"
+#include "FPSCamera.hpp"
 #include "Debug/DebugCube.hpp"
+#include "Voxel/Chunk.hpp"
 using namespace std;
 
 int width, height;
 
 bool initGL(){
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.0, 0.0, 1.0, 0.0);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
+
+	glEnable(GL_CULL_FACE);
 
 	return true;
 }
@@ -58,19 +62,61 @@ int main(int argc, char *argv[]){
 	prg.setUniform("mvp");
 	prg.setUniform("myTexture");
 
-	//create texture
-	sf::Image tex;
-	tex.loadFromFile("data/cube.png");
+	ShaderProgram vprg("data/shaders/voxelV.glsl",
+			"data/shaders/voxelF.glsl");
+	vprg.setAttribute("coord");
+	vprg.setUniform("mvp");
+	vprg.setUniform("myTexture");
 
 	DebugCube cube;
 
+	//Load texture atlas
+
+	sf::Image texAt;
+	texAt.loadFromFile("data/textures/terrain.png");
+
+	GLuint texID;
+	glGenTextures(1,&texID);
+	glBindTexture(GL_TEXTURE_2D,texID);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D,
+			0,
+			GL_RGBA,
+			texAt.getSize().x,
+			texAt.getSize().y,
+			0,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			texAt.getPixelsPtr());
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	Chunk chunk;
+	chunk.set(0,0,0,1);
+	chunk.set(1,0,0,1);
+	chunk.set(2,0,0,1);
+	chunk.set(3,0,0,1);
+	chunk.set(4,0,0,1);
+	chunk.set(0,1,0,2);
+	chunk.set(1,1,0,2);
+	chunk.set(2,1,0,2);
+	chunk.set(3,1,0,2);
+	chunk.set(4,1,0,2);
+	chunk.set(0,0,1,1);
+
 	screen.setActive(true);
 
+	FPSCamera camera(0,0,-4,0,0);
+
 	sf::Clock timer;
+	sf::Time dt;
 	timer.restart();
 	while(screen.isOpen()){
 		while(screen.pollEvent(event)){
 			if(event.type == sf::Event::Closed){
+				screen.close();
+			}
+			if(event.key.code == sf::Keyboard::Escape){
 				screen.close();
 			}
 			if(event.type == sf::Event::Resized){
@@ -79,31 +125,57 @@ int main(int argc, char *argv[]){
 				glViewport(0,0,width,height);
 			}
 		}
+
+
+		//Change camera stuffam
+		screen.setMouseCursorVisible(false);
+		sf::Vector2i pos = sf::Mouse::getPosition(screen) - 
+			sf::Vector2i(width/2,height/2);
+		camera.turnX(pos.x*dt.asSeconds()*100.0);
+		camera.turnY(pos.y*dt.asSeconds()*100.0);
+		sf::Mouse::setPosition(sf::Vector2i(width/2,height/2),
+				screen);
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
+			camera.move(10*dt.asSeconds());
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::S)){
+			camera.move(-10*dt.asSeconds());
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::A)){
+			camera.strafe(-10*dt.asSeconds());
+		}
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
+			camera.strafe(10*dt.asSeconds());
+		}
 		float angle = timer.getElapsedTime().asMilliseconds() / 1000.0 * 15;
 		
-		glm::mat4 anim = \
-			glm::rotate(glm::mat4(1.0f), angle*3.0f, glm::vec3(1, 0, 0)) *  // X axis
-			glm::rotate(glm::mat4(1.0f), angle*2.0f, glm::vec3(0, 1, 0)) *  // Y axis
-			glm::rotate(glm::mat4(1.0f), angle*4.0f, glm::vec3(0, 0, 1)); 
-
 		glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0.0,
 					0.0, -4.0));
-		glm::mat4 view = glm::lookAt(glm::vec3(0.0, 2.0, 0.0), 
-				glm::vec3(0.0, 0.0, -4.0), glm::vec3(0.0, 1.0, 0.0));
 		glm::mat4 projection = glm::perspective(45.0f, 
 				1.0f*width/height, 0.1f, 1000.0f);
 
-		glm::mat4 mvp = projection * view * model * anim;
+		glm::mat4 mvp = projection * camera.view() * model;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+
+		glUseProgram(vprg.getID());
+		glUniformMatrix4fv(vprg.getUniform(0),1,GL_FALSE,
+				glm::value_ptr(mvp));
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D,texID);
+		glUniform1i(vprg.getUniform(1),0);
+
+		chunk.draw(vprg);
+
 		glUseProgram(prg.getID());
 		glUniformMatrix4fv(prg.getUniform(0),1,GL_FALSE,
 				glm::value_ptr(mvp));
 
 		cube.draw(prg);
-		
 
 		screen.display();
+		dt = timer.restart();
 	}
 }

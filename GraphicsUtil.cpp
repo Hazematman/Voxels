@@ -94,9 +94,9 @@ ShaderProgram::ShaderProgram(string vertex, string fragment){
 }
 
 ShaderProgram::~ShaderProgram(){
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-	glDeleteProgram(programID);
+	//glDeleteShader(vs);
+	//glDeleteShader(fs);
+	//glDeleteProgram(programID);
 }
 
 int ShaderProgram::compileShader(string filename, GLenum type){
