@@ -33,8 +33,13 @@ void Chunk::update(){
 				if(!blk[x][y][z])
 					continue;
 
+				int top = 128;
+				/*if(blk[x][y][z] == 2){
+					top += 16;
+				}*/
+
 				// View from negative x
-				if(x > 0 && !blk[x-1][y][z]){
+				if(x > 0 && !blk[x-1][y][z]){  
 					vertex[i++] = byte4(x,     y,     z,     blk[x][y][z]);        
 					vertex[i++] = byte4(x,     y,     z + 1, blk[x][y][z]);        
 					vertex[i++] = byte4(x,     y + 1, z,     blk[x][y][z]);        
@@ -55,22 +60,22 @@ void Chunk::update(){
 
 				// View from negative y
 				if(y > 0 && !blk[x][y-1][z]){
-					vertex[i++] = byte4(x, y, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y, z + 1, blk[x][y][z]+128);
-					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]+128);
+					vertex[i++] = byte4(x, y, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y, z + 1, blk[x][y][z]+top);
+					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]+top);
 				}
 
 				// View from positive y
 				if(y < CY && !blk[x][y+1][z]){
-					vertex[i++] = byte4(x, y + 1, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x, y + 1, z + 1, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y + 1, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y + 1, z, blk[x][y][z]+128);
-					vertex[i++] = byte4(x, y + 1, z + 1, blk[x][y][z]+128);
-					vertex[i++] = byte4(x + 1, y + 1, z + 1, blk[x][y][z]+128);
+					vertex[i++] = byte4(x, y + 1, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x, y + 1, z + 1, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y + 1, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y + 1, z, blk[x][y][z]+top);
+					vertex[i++] = byte4(x, y + 1, z + 1, blk[x][y][z]+top);
+					vertex[i++] = byte4(x + 1, y + 1, z + 1, blk[x][y][z]+top);
 				}
 
 				// View from negative z
