@@ -1,5 +1,5 @@
 #include "FPSCamera.hpp"
-#define PI 3.14159265359 
+#include "Globals.hpp"
 
 float toDegrees(float rad){
 	return rad*(180.0/PI);

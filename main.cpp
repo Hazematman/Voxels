@@ -5,6 +5,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <memory>
+#include <time.h>
+#include "Globals.hpp"
 #include "GraphicsUtils.hpp"
 #include "FPSCamera.hpp"
 #include "Noise/Noise.hpp"
@@ -13,6 +15,7 @@
 using namespace std;
 
 int width, height;
+RNG randoms;
 
 bool initGL(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -29,6 +32,7 @@ bool initGL(){
 }
 
 int main(int argc, char *argv[]){
+	cout << "Random Seed is " << randoms.getSeed() << endl;
 	sf::ContextSettings cs;
 	cs.majorVersion = 3;
 	cs.minorVersion = 0;
@@ -163,6 +167,12 @@ int main(int argc, char *argv[]){
 		glm::mat4 mvp = projection * camera.view() * model;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glUseProgram(prg->getID());
+		glUniformMatrix4fv(vprg->getUniform(0),1,GL_FALSE,
+				glm::value_ptr(mvp));
+		
+		cube.draw(prg.get());
 
 		glUseProgram(vprg->getID());
 		glUniformMatrix4fv(vprg->getUniform(0),1,GL_FALSE,

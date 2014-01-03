@@ -1,6 +1,8 @@
 #include <cstring>
 #include <SFML/Graphics.hpp>
+#include <cmath>
 #include "DebugCube.hpp"
+#include "../Globals.hpp"
 using namespace std;
 
 GLfloat cubeVerts[] = {
@@ -124,10 +126,33 @@ DebugCube::DebugCube(){
 
 	//create texture
 	sf::Image tex;
-	tex.loadFromFile("data/cube.png");
+	tex.create(256,256,sf::Color(0,0,0));
+	Noise n(randoms.getInt());
+	double fN = 0.003;
+	for(int y=0;y<256;y++){
+		for(int x=0;x<256;x++){
+			double fNX = x/256.0;
+			double fNY = y/256.0;
+			double fRDX = fNX*2*PI;
+			double fRDY = fNY*2*PI;
+			double a = 256.0*sin(fRDX);
+			double b = 256.0*cos(fRDX);
+			double c = 256.0*sin(fRDY);
+			double d = 256.0*cos(fRDY);
+			double v = n.get(193+a*fN,
+					331+b*fN,
+					512+c*fN,
+					293+d*fN);
+			int num = (v*128.0)+128.0;
+			tex.setPixel(x,y,sf::Color(num,num,num));
+		}
+	}
+	//sf::Image tex;
+	//tex.loadFromFile("data/cube.png");
 	glGenTextures(1,&texID);
 	glBindTexture(GL_TEXTURE_2D,texID);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexImage2D(GL_TEXTURE_2D,
 			0,
 			GL_RGBA,
@@ -136,7 +161,7 @@ DebugCube::DebugCube(){
 			0,
 			GL_RGBA,
 			GL_UNSIGNED_BYTE,
-			tex.getPixelsPtr());	
+			tex.getPixelsPtr());
 }
 
 DebugCube::~DebugCube(){
