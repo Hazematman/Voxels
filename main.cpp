@@ -7,6 +7,7 @@
 #include <memory>
 #include "GraphicsUtils.hpp"
 #include "FPSCamera.hpp"
+#include "Noise/Noise.hpp"
 #include "Debug/DebugCube.hpp"
 #include "Voxel/Chunk.hpp"
 using namespace std;
