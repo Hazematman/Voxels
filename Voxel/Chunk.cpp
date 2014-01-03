@@ -34,18 +34,18 @@ void Chunk::update(){
 					continue;
 
 				int top = 128;
-				/*if(blk[x][y][z] == 2){
+				if(blk[x][y][z] == 2){
 					top += 16;
-				}*/
+				}
 
 				// View from negative x
 				if(x > 0 && !blk[x-1][y][z]){  
-					vertex[i++] = byte4(x,     y,     z,     blk[x][y][z]);        
-					vertex[i++] = byte4(x,     y,     z + 1, blk[x][y][z]);        
-					vertex[i++] = byte4(x,     y + 1, z,     blk[x][y][z]);        
-					vertex[i++] = byte4(x,     y + 1, z,     blk[x][y][z]);        
-					vertex[i++] = byte4(x,     y,     z + 1, blk[x][y][z]);        
-					vertex[i++] = byte4(x,     y + 1, z + 1, blk[x][y][z]);
+					vertex[i++] = byte4(x, y, z, blk[x][y][z]);        
+					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]);        
+					vertex[i++] = byte4(x, y + 1, z, blk[x][y][z]);        
+					vertex[i++] = byte4(x, y + 1, z, blk[x][y][z]);        
+					vertex[i++] = byte4(x, y, z + 1, blk[x][y][z]);        
+					vertex[i++] = byte4(x, y + 1, z + 1, blk[x][y][z]);
 				}		
 		 
 				// View from positive x

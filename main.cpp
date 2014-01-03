@@ -104,10 +104,10 @@ int main(int argc, char *argv[]){
 	chunk.set(3,1,0,2);
 	chunk.set(4,1,0,2);
 	chunk.set(0,0,1,1);
-	chunk.set(0,1,1,18);
-	chunk.set(1,1,1,19);
+	chunk.set(0,1,1,3);
+	chunk.set(1,1,1,3);
 	chunk.set(1,1,2,1);
-	chunk.set(1,1,5,19);
+	chunk.set(1,1,5,3);
 
 	screen.setActive(true);
 
