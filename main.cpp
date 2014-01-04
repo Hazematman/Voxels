@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
 
 	screen.setActive(true);
 
-	FPSCamera camera(0,0,-4,0,0);
+	FPSCamera camera(-3,0,-4,0,0);
 
 	sf::Clock timer;
 	sf::Time dt;
@@ -151,11 +151,16 @@ int main(int argc, char *argv[]){
 
 		glm::mat4 mvp = projection * camera.view();
 
+		glm::mat4 cubem = glm::translate(glm::mat4(1.0),
+				glm::vec3(-3,0,0));
+
+		glm::mat4 cmvp = mvp*cubem;
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(prg->getID());
 		glUniformMatrix4fv(prg->getUniform(0),1,GL_FALSE,
-				glm::value_ptr(mvp));
+				glm::value_ptr(cmvp));
 
 		cube.draw(prg.get());
 

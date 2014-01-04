@@ -126,7 +126,7 @@ DebugCube::DebugCube(){
 
 	//create texture
 	sf::Image tex;
-	double size = 64;
+	double size = 256;
 	tex.create(size,size,sf::Color(0,0,0));
 	Noise n(randoms.getInt());
 	double fNoiseScale = 0.006;

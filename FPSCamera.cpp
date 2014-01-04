@@ -10,7 +10,7 @@ float toRad(float degrees){
 }
 
 FPSCamera::FPSCamera(float x, float y, float z,float xangle, float yangle){
-	pos = glm::vec3(x,y,z);
+	pos = glm::vec3(-x,y,z);
 	angle = glm::vec3(xangle,yangle,0);
 }
 
