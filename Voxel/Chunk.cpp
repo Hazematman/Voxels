@@ -9,8 +9,7 @@ Chunk::Chunk(){
 }
 
 Chunk::~Chunk(){
-	//TODO fix deleting buffers
-	//glDeleteBuffers(1,&vbo);
+	glDeleteBuffers(1,&vbo);
 }
 
 uint8_t Chunk::get(int x, int y, int z){

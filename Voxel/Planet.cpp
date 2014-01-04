@@ -11,9 +11,6 @@ double fNoiseScale = 0.006;
 Planet::Planet(int size):noise(randoms.getInt()){
 	this->size = size;
 	chunks.resize(size*size);
-	for(int x=0;x<size*size;x++){
-		chunks.at(x) = Chunk();
-	}
 
 	for(int y=0;y<size;y++){
 		for(int x=0;x<size;x++){
