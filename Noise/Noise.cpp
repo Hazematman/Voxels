@@ -53,24 +53,11 @@ Noise::Noise(uint32_t seed):rng(seed){
 		permMod12[i] = (short)(perm[i] % 12);
 	}
 
-	setOct();
 }
 
 int Noise::fastFloor(double x){
 	int xi = (int)x;
 	return x<xi ? xi-1 : xi;
-}
-
-void Noise::setOct(){
-	fPersMax = 0;
-	for(int i=0;i<2;i++){
-		double fFreq = pow(2,i);
-		double fPers = pow(fPers, i);
-		fPersMax += fPers;
-		aOctFreq.push_back(fFreq);
-		aOctPers.push_back(fPers);
-	}
-	fPersMax = 1.0 / fPersMax;
 }
 
 double Noise::dot(Grad g, double x, double y){
@@ -335,15 +322,6 @@ double Noise::noise4D(double x, double y, double z, double w){
     return 27.0 * (n0 + n1 + n2 + n3 + n4);
 }
 
-double Noise::clean(double x, double y, double z, double w){
-	double out = 0;
-	for(int i=0;i<2;i++){
-		double fFreq = aOctFreq[i];
-		double fPers = aOctPers[i];
-		out += fPers*noise4D(fFreq*x,fFreq*y,fFreq*z,fFreq*w);
-	}
-	return (out*fPersMax + 1.0)*0.5;
-}
 
 double Noise::get(double x){
 	return noise2D(x,0);
@@ -359,14 +337,5 @@ double Noise::get(double x, double y, double z){
 
 double Noise::get(double x, double y, double z, double w){
 	return noise4D(x,y,z,w);
-}
-
-double Noise::smooth2D(double x, double y){
-	double corners =( noise2D(x-1, y-1)+noise2D(x+1, y-1)+noise2D(x-1, y+1)+
-			noise2D(x+1, y+1) ) / 16.0;
-	double sides =( noise2D(x-1, y)  +noise2D(x+1, y)  +noise2D(x, y-1)+
-			noise2D(x, y+1) ) /  8.0; 
-	double center = noise2D(x,y)/4.0;
-	return corners + sides + center;
 }
 

@@ -31,6 +31,11 @@ void FPSCamera::turnX(float amount){
 
 void FPSCamera::turnY(float amount){
 	angle.y += amount;
+	if(angle.y > 90){
+		angle.y = 90;
+	}else if(angle.y < -90){
+		angle.y = -90;
+	}
 }
 
 glm::mat4 FPSCamera::view(){

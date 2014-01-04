@@ -6,5 +6,6 @@
 #define PI 3.14158265359
 
 extern RNG randoms;
+extern Noise gNoise;
 
 #endif

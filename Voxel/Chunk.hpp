@@ -6,7 +6,7 @@
 #include "../GraphicsUtils.hpp"
 
 #define CX 16
-#define CY 16
+#define CY 256
 #define CZ 16
 
 typedef glm::detail::tvec4<GLbyte> byte4;
@@ -17,6 +17,8 @@ class Chunk {
 		GLuint vbo;
 		int elements;
 		bool changed;
+
+		uint8_t getType(int x, int y, int z);
 	public:
 		Chunk();
 		~Chunk();

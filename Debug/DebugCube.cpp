@@ -126,23 +126,25 @@ DebugCube::DebugCube(){
 
 	//create texture
 	sf::Image tex;
-	tex.create(256,256,sf::Color(0,0,0));
+	double size = 256;
+	tex.create(size,size,sf::Color(0,0,0));
 	Noise n(randoms.getInt());
-	double fN = 0.003;
-	for(int y=0;y<256;y++){
-		for(int x=0;x<256;x++){
-			double fNX = x/256.0;
-			double fNY = y/256.0;
+	double fNoiseScale = 0.006;
+	for(int y=0;y<size;y++){
+		for(int x=0;x<size;x++){
+			double fNX = x/size;
+			double fNY = y/size;
 			double fRDX = fNX*2*PI;
 			double fRDY = fNY*2*PI;
-			double a = 256.0*sin(fRDX);
-			double b = 256.0*cos(fRDX);
-			double c = 256.0*sin(fRDY);
-			double d = 256.0*cos(fRDY);
-			double v = n.get(193+a*fN,
-					331+b*fN,
-					512+c*fN,
-					293+d*fN);
+			double a = size*sin(fRDX);
+			double b = size*cos(fRDX);
+			double c = size*sin(fRDY);
+			double d = size*cos(fRDY);
+			double v = gNoise.get(
+					123+a*fNoiseScale,
+					231+b*fNoiseScale,
+					312+c*fNoiseScale,
+					273+d*fNoiseScale);
 			int num = (v*128.0)+128.0;
 			tex.setPixel(x,y,sf::Color(num,num,num));
 		}

@@ -45,10 +45,6 @@ class Noise {
 		uint8_t perm[512];
 		uint8_t permMod12[512];
 
-		std::vector<double> aOctFreq;
-		std::vector<double> aOctPers;
-		double fPersMax;
-
 		double F2 = 0.5*(sqrt(3.0)-1.0);
 		double G2 = (3.0-sqrt(3.0))/6.0;
 		double F3 = 1.0/3.0;
@@ -58,8 +54,6 @@ class Noise {
 
 		int fastFloor(double x);
 
-		void setOct();
-
 		double dot(Grad g, double x, double y);
 		double dot(Grad g, double x, double y, double z);
 		double dot(Grad g, double x, double y, double z, double w);
@@ -67,8 +61,6 @@ class Noise {
 		double noise2D(double x, double y);
 		double noise3D(double x, double y, double z);
 		double noise4D(double x, double y, double z, double w);
-
-		double clean(double x, double y, double z, double w);
 	public:
 		Noise(uint32_t seed);
 
@@ -76,9 +68,6 @@ class Noise {
 		double get(double x, double y);
 		double get(double x, double y, double z);
 		double get(double x, double y, double z, double w);
-
-		double smooth2D(double x, double y);
-
 };
 
 #endif

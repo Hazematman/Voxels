@@ -11,11 +11,12 @@
 #include "FPSCamera.hpp"
 #include "Noise/Noise.hpp"
 #include "Debug/DebugCube.hpp"
-#include "Voxel/Chunk.hpp"
+#include "Voxel/Planet.hpp"
 using namespace std;
 
 int width, height;
 RNG randoms;
+Noise gNoise(time(NULL));
 
 bool initGL(){
 	glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -71,10 +72,13 @@ int main(int argc, char *argv[]){
 	shared_ptr<ShaderProgram> vprg(new ShaderProgram("data/shaders/voxelV.glsl",
 			"data/shaders/voxelF.glsl"));
 	vprg->setAttribute("coord");
-	vprg->setUniform("mvp");
+	vprg->setUniform("vp");
+	vprg->setUniform("m");
 	vprg->setUniform("myTexture");
 
 	DebugCube cube;
+
+	Planet p(4);
 
 	//Load texture atlas
 
@@ -96,23 +100,6 @@ int main(int argc, char *argv[]){
 			GL_UNSIGNED_BYTE,
 			texAt.getPixelsPtr());
 	glGenerateMipmap(GL_TEXTURE_2D);
-
-	Chunk chunk;
-	chunk.set(0,0,0,1);
-	chunk.set(1,0,0,1);
-	chunk.set(2,0,0,1);
-	chunk.set(3,0,0,1);
-	chunk.set(4,0,0,1);
-	chunk.set(0,1,0,2);
-	chunk.set(1,1,0,2);
-	chunk.set(2,1,0,2);
-	chunk.set(3,1,0,2);
-	chunk.set(4,1,0,2);
-	chunk.set(0,0,1,1);
-	chunk.set(0,1,1,3);
-	chunk.set(1,1,1,3);
-	chunk.set(1,1,2,1);
-	chunk.set(1,1,5,3);
 
 	screen.setActive(true);
 
@@ -141,8 +128,8 @@ int main(int argc, char *argv[]){
 		screen.setMouseCursorVisible(false);
 		sf::Vector2i pos = sf::Mouse::getPosition(screen) - 
 			sf::Vector2i(width/2,height/2);
-		camera.turnX(pos.x*dt.asSeconds()*100.0);
-		camera.turnY(pos.y*dt.asSeconds()*100.0);
+		camera.turnX(pos.x*dt.asSeconds()*50.0);
+		camera.turnY(pos.y*dt.asSeconds()*50.0);
 		sf::Mouse::setPosition(sf::Vector2i(width/2,height/2),
 				screen);
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::W)){
@@ -157,21 +144,19 @@ int main(int argc, char *argv[]){
 		if(sf::Keyboard::isKeyPressed(sf::Keyboard::D)){
 			camera.strafe(10*dt.asSeconds());
 		}
-		float angle = timer.getElapsedTime().asMilliseconds() / 1000.0 * 15;
-		
-		glm::mat4 model = glm::translate(glm::mat4(1.0f),glm::vec3(0.0,
-					0.0, -4.0));
+
+		//Create projection matrix and view-project matrix;
 		glm::mat4 projection = glm::perspective(45.0f, 
 				1.0f*width/height, 0.1f, 1000.0f);
 
-		glm::mat4 mvp = projection * camera.view() * model;
+		glm::mat4 mvp = projection * camera.view();
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(prg->getID());
-		glUniformMatrix4fv(vprg->getUniform(0),1,GL_FALSE,
+		glUniformMatrix4fv(prg->getUniform(0),1,GL_FALSE,
 				glm::value_ptr(mvp));
-		
+
 		cube.draw(prg.get());
 
 		glUseProgram(vprg->getID());
@@ -181,9 +166,9 @@ int main(int argc, char *argv[]){
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D,texID);
-		glUniform1i(vprg->getUniform(1),0);
+		glUniform1i(vprg->getUniform(2),0);
 
-		chunk.draw(vprg.get());
+		p.draw(vprg.get());
 
 		screen.display();
 		dt = timer.restart();
