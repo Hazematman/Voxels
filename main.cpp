@@ -124,7 +124,7 @@ int main(int argc, char *argv[]){
 		}
 
 
-		//Change camera stuffam
+		//Change camera stuff
 		screen.setMouseCursorVisible(false);
 		sf::Vector2i pos = sf::Mouse::getPosition(screen) - 
 			sf::Vector2i(width/2,height/2);
