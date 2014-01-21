@@ -3,6 +3,15 @@
 #include "Chunk.hpp"
 using namespace std;
 
+byte byte4(int a, int b, int c, int d){
+	byte out;
+	out.byte[0] = a;
+	out.byte[1] = b;
+	out.byte[2] = c;
+	out.byte[3] = d;
+	return out;
+}
+
 Chunk::Chunk(){
 	memset(blk,0,CX*CY*CZ);//sizeof(blk));
 	glGenBuffers(1,&vbo);
@@ -32,7 +41,8 @@ void Chunk::update(){
 	changed = false;
 
 	//byte4 vertex[CX * CY * CZ * 6 * 6];
-	vector<byte4> vertex(CX * CY * CZ * 6 * 6);
+	//vector<byte4> vertex(CX * CY * CZ * 6 * 6);
+	vector<byte> vertex(CX * CY * CZ * 6 * 6);
 	int i = 0;
 	
 	for(int x = 0; x < CX; x++){

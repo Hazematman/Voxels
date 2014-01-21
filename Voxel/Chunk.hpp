@@ -9,7 +9,12 @@
 #define CY 256
 #define CZ 16
 
-typedef glm::detail::tvec4<GLbyte> byte4;
+
+struct byte {
+	GLbyte byte[4];
+};
+
+byte byte4(int a, int b, int c, int d);
 
 class Chunk {
 	private:
